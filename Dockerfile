@@ -1,10 +1,19 @@
-FROM quay.io/qasimtech/global-botz:latest
+FROM node:20-bullseye
 
-RUN git clone https://github.com/GlobalTechInfo/GLOBAL-XMD /root/mega && \
-    rm -rf /root/mega/.git
+RUN apt-get update && \
+  apt-get install -y \
+  ffmpeg \
+  imagemagick \
+  webp && \
+  apt-get upgrade -y && \
+  rm -rf /var/lib/apt/lists/*
 
-WORKDIR /root/mega
-RUN npm install || yarn install
+COPY package.json .
+
+RUN npm install
+
+COPY . .
 
 EXPOSE 5000
-CMD ["npm", "start"]
+
+RUN npm start
