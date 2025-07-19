@@ -1,37 +1,32 @@
 FROM ubuntu:24.04
 
-# Install dependencies
 RUN apt-get update && apt-get install -y \
+    git \
     curl \
-    gnupg \
+    sudo \
+    bash \
+    ffmpeg \
+    webp \
+    imagemagick \
+    python3 \
     ca-certificates \
-    lsb-release \
+    gnupg \
     software-properties-common
 
-# Install Node.js 20 and Yarn
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
-    npm install --global yarn
+    npm install -g yarn supervisor sharp
 
-# Install ffmpeg, imagemagick, webp
-RUN apt-get update && apt-get install -y \
-    ffmpeg \
-    imagemagick \
-    webp && \
-    apt-get upgrade -y && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Set working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
 COPY package.json ./
 RUN npm install
-# Copy remaining app source
 COPY . .
 
-# Expose port
 EXPOSE 5000
 
-# Start the app
 CMD ["npm", "start"]
