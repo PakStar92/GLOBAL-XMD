@@ -26,8 +26,7 @@ WORKDIR /app
 
 # Copy package.json and install dependencies
 COPY package.json ./
-RUN npm install  # or use `yarn install` if you're using Yarn
-
+RUN npm install
 # Copy remaining app source
 COPY . .
 
