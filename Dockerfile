@@ -1,7 +1,10 @@
-FROM node:20-bullseye
 
-RUN apt-get update && \
-  apt-get install -y \
+FROM node:lts-buster
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+         && apt-get install -y nodejs \
+         && npm install --global yarn
+
+RUN apt-get install -y \
   ffmpeg \
   imagemagick \
   webp && \
@@ -10,10 +13,10 @@ RUN apt-get update && \
 
 COPY package.json .
 
-RUN npm install
+RUN yarn install
 
 COPY . .
 
 EXPOSE 5000
 
-RUN npm start
+RUN yarn start
